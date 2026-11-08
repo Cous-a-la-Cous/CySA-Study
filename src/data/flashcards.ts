@@ -1,0 +1,48 @@
+import type { Flashcard } from "./types";
+
+export const FLASHCARDS: Flashcard[] = [
+  // Domain 1
+  { id: "fc-01", domain: 1, front: "ZTNA", back: "Zero Trust Network Access — 'never trust, always verify.' Per-application access granted on identity, device posture, and context; network location confers no trust. Often a component of SASE." },
+  { id: "fc-02", domain: 1, front: "SASE", back: "Secure Access Service Edge — cloud-delivered convergence of networking (SD-WAN) and security services (ZTNA, SWG, CASB, FWaaS)." },
+  { id: "fc-03", domain: 1, front: "LOLBins", back: "Living-off-the-land binaries — legitimate signed system tools (certutil, mshta, regsvr32, PowerShell, rundll32) abused by attackers. Detect via process lineage and command-line args, not file reputation." },
+  { id: "fc-04", domain: 1, front: "Impossible travel", back: "Identity-based indicator: logins from two distant locations in a physically impossible timeframe → likely credential/session compromise." },
+  { id: "fc-05", domain: 1, front: "Pyramid of Pain", back: "Ranks IoC types by cost to the adversary when blocked: hashes (trivial) → IPs (easy) → domains (simple) → artifacts (annoying) → tools (challenging) → TTPs (tough). Detect at TTP level for maximum impact." },
+  { id: "fc-06", domain: 1, front: "Atomic vs behavioral IoC", back: "Atomic: discrete artifact (hash, IP, domain) — easy to match, easy for attacker to change. Behavioral: pattern of actions (process chain, sequence) — resilient, survives recompilation/infra rotation." },
+  { id: "fc-07", domain: 1, front: "STRIDE", back: "Threat-modeling mnemonic: Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege. Used at design time." },
+  { id: "fc-08", domain: 1, front: "Zeek vs Snort/Suricata", back: "Zeek = network security monitor producing rich protocol logs (conn/dns/http/ssl) for analysis. Snort/Suricata = signature-based IDS/IPS. All feed SIEMs; Wireshark/tcpdump do packet capture." },
+  { id: "fc-09", domain: 1, front: "TIP tools", back: "Threat Intelligence Platforms: MISP, OpenCTI, OTX. Aggregate feeds, store indicator relationships, share intel (STIX/TAXII)." },
+  { id: "fc-10", domain: 1, front: "Playbook vs runbook", back: "Playbook = strategic workflow for an incident type (phases, decisions, escalation). Runbook = tactical step-by-step procedure for a specific task. Either can be automated." },
+  { id: "fc-11", domain: 1, front: "SOAR", back: "Security Orchestration, Automation, and Response — automates repetitive workflows (enrichment, quarantine, ticket creation) via APIs/webhooks; cuts MTTR and analyst toil." },
+  { id: "fc-12", domain: 1, front: "AI risks (new in CS0-004)", back: "Hallucinations (fabricated output), data exposure (sensitive data into public models), model poisoning (corrupted training data), prompt injection (malicious instructions in input). Govern with usage policies and human verification." },
+  { id: "fc-13", domain: 1, front: "EVTX / Event 4625 / Event 7045", back: "EVTX = native Windows event log format. 4625 = failed logon; 7045 = new service installed (persistence indicator). Parse with PowerShell Get-WinEvent, Chainsaw, hayabusa." },
+  { id: "fc-14", domain: 1, front: "CyberChef / YARA / MXToolbox", back: "CyberChef = decode/transform/de-obfuscate data. YARA = pattern-match rules for malware families across files/memory. MXToolbox = email DNS checks (SPF, DKIM, DMARC, MX, blacklists)." },
+  // Domain 2
+  { id: "fc-15", domain: 2, front: "Credentialed vs non-credentialed scan", back: "Credentialed logs in (SSH/WMI) → deep, accurate patch/config data, fewer false results. Non-credentialed sees only exposed services → attacker's view, more false negatives." },
+  { id: "fc-16", domain: 2, front: "Agent vs agentless scanning", back: "Agent: on-host software reporting continuously — best for roaming/off-network assets. Agentless: network-launched scans — no footprint, but only sees assets online during the window." },
+  { id: "fc-17", domain: 2, front: "Passive scanning", back: "Sniffs traffic (SPAN/TAP), injects zero packets — ideal for OT/ICS and fragile systems. Only sees assets that communicate." },
+  { id: "fc-18", domain: 2, front: "CVSS vs EPSS", back: "CVSS = severity/impact score of a vulnerability. EPSS = probability it will be exploited in the wild within 30 days. Prioritize: high CVSS + high EPSS + internet-facing + critical asset." },
+  { id: "fc-19", domain: 2, front: "CVSS vector quick read", back: "AV (N/L/A/P) attack vector, AC complexity, PR privileges required, UI user interaction, S scope, C/I/A impact. AV:N/AC:L/PR:N/UI:N with C/I/A:H = 9.8-10 Critical (wormable)." },
+  { id: "fc-20", domain: 2, front: "False positive vs false negative", back: "False positive = reported but not real (wastes effort; e.g., backported patches confuse version checks). False negative = real but missed (dangerous; common with non-credentialed scans)." },
+  { id: "fc-21", domain: 2, front: "Cloud & web assessment tools", back: "Cloud config: ScoutSuite, Prowler. Containers/IaC: Trivy, Checkov. Web apps: Burp Suite, ZAP, Nikto. Vuln scanners: Nessus, OpenVAS, Nuclei. BAS: Atomic Red Team, Caldera." },
+  { id: "fc-22", domain: 2, front: "Control types vs functions", back: "Types: administrative (policy/training), technical (WAF/EDR), physical (locks/guards). Functions: preventative (stops), detective (finds), corrective/responsive (fixes)." },
+  { id: "fc-23", domain: 2, front: "Risk terms", back: "Inherent risk = before controls. Residual risk = after controls. Appetite = tolerance threshold. Treatments: accept, transfer (insurance), avoid (stop activity), mitigate (controls)." },
+  { id: "fc-24", domain: 2, front: "SAST vs DAST vs SCA", back: "SAST = white-box source code analysis, early SDLC. DAST = black-box testing of the running app. SCA = third-party component/dependency analysis, uses SBOMs." },
+  { id: "fc-25", domain: 2, front: "SBOM", back: "Software Bill of Materials — inventory of all components/dependencies in software. Feeds SCA tools to find known CVEs (the Log4Shell lesson: you can't fix what you can't find)." },
+  { id: "fc-26", domain: 2, front: "Compensating control", back: "Alternative safeguard when primary remediation (patching) isn't possible: segmentation, ACLs, WAF/IPS virtual patching, monitoring. Pair with a documented, time-bound exception." },
+  // Domain 3
+  { id: "fc-27", domain: 3, front: "Cyber Kill Chain (7 phases)", back: "Reconnaissance → Weaponization → Delivery → Exploitation → Installation → Command & Control → Actions on Objectives. Break any phase = attack fails." },
+  { id: "fc-28", domain: 3, front: "Diamond Model", back: "Four vertices of an intrusion event: Adversary, Capability, Infrastructure, Victim. Pivot across them for analysis and attribution." },
+  { id: "fc-29", domain: 3, front: "ATT&CK: tactic vs technique vs procedure", back: "Tactic = the goal (why: Lateral Movement). Technique = the method (how: T1021 RDP). Procedure = specific implementation by an actor." },
+  { id: "fc-30", domain: 3, front: "IR lifecycle", back: "Preparation → Detection & Analysis → Containment → Eradication → Recovery → Post-Incident Activity (lessons learned, RCA). Eradication BEFORE recovery." },
+  { id: "fc-31", domain: 3, front: "Chain of custody", back: "Chronological documentation of evidence: who collected/handled/transferred it, when, where, why. Required for legal admissibility. Pair with hashing (integrity) and working from copies (preservation)." },
+  { id: "fc-32", domain: 3, front: "Order of volatility", back: "Capture most fragile first: registers/cache → RAM → network connections → running processes → disk → backups. Power-off destroys memory-resident evidence." },
+  { id: "fc-33", domain: 3, front: "Legal hold", back: "Suspends normal deletion/retention when litigation is anticipated — preserve logs, images, emails. Overrides routine rotation/reimaging." },
+  { id: "fc-34", domain: 3, front: "Tabletop exercise", back: "Discussion-based scenario walkthrough testing plans, roles, and decisions — no live systems touched. A preparation-phase activity that exposes gaps cheaply." },
+  { id: "fc-35", domain: 3, front: "EDR network isolation", back: "Containment action: blocks all host traffic except EDR management channel — kills C2/lateral movement while preserving remote investigation access. Reversible: 'release from isolation.'" },
+  { id: "fc-36", domain: 3, front: "RCA", back: "Root Cause Analysis — identifies WHY the incident occurred (exploited weakness + systemic contributors) so corrective actions fix causes, not symptoms. Post-incident phase output." },
+  // Domain 4
+  { id: "fc-37", domain: 4, front: "Inhibitors to remediation", back: "MOUs/SLAs, governance, business interruption, degraded functionality, legacy/proprietary systems, patch availability. Surface them in reports with compensating controls and exceptions." },
+  { id: "fc-38", domain: 4, front: "IR metrics", back: "MTTD (detect), MTTR (respond), MTT-remediate/contain/close, alert volume, false/true positive rates, phishing click rate. Trends justify investment." },
+  { id: "fc-39", domain: 4, front: "Communication plan stakeholders", back: "Legal, PR/comms, compliance/privacy, executives, law enforcement (as applicable), customers. One approved voice; analysts don't freelance external statements." },
+  { id: "fc-40", domain: 4, front: "Post-incident deliverables", back: "After-action report, lessons learned, RCA, corrective actions with owners/dates. Plus shift handovers during the incident and internal threat intel reports between them." },
+];

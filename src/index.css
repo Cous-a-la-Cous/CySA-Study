@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 96%;
+    --card: 220 39% 9%;
+    --card-foreground: 210 40% 96%;
+    --popover: 220 39% 9%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 187 92% 55%;
+    --primary-foreground: 222 47% 6%;
+    --secondary: 217 33% 15%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 62%;
+    --accent: 217 33% 15%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 40% 96%;
+    --border: 217 33% 16%;
+    --input: 217 33% 18%;
+    --ring: 187 92% 55%;
+    --radius: 0.625rem;
+    --sidebar-background: 220 39% 9%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 187 92% 55%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 217 33% 16%;
+    --sidebar-ring: 187 92% 55%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  code, kbd, .font-mono {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  ::selection {
+    background: hsl(187 92% 55% / 0.3);
+  }
+}
+
+@layer utilities {
+  .scanline-bg {
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(187 92% 55% / 0.08), transparent),
+      linear-gradient(hsl(217 33% 12% / 0.4) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 28px;
+  }
+  .card-glow {
+    box-shadow: 0 0 0 1px hsl(217 33% 18%), 0 8px 32px -12px hsl(0 0% 0% / 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
