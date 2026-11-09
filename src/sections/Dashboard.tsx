@@ -1,8 +1,9 @@
 import { DOMAINS } from "../data/domains";
-import { ALL_QUESTIONS, questionsForDomain } from "../data";
+import type { Question } from "../data/types";
 import type { Progress } from "../lib/progress";
 
 interface DashboardProps {
+  questions: Question[] | null; // null while the full bank is loading
   progress: Progress;
   onStudy: (domainId: number) => void;
   onExam: () => void;
@@ -12,10 +13,19 @@ interface DashboardProps {
   onReset: () => void;
 }
 
-export default function Dashboard({ progress, onStudy, onExam, onFlashcards, onObjectives, onReview, onReset }: DashboardProps) {
+export default function Dashboard({ questions, progress, onStudy, onExam, onFlashcards, onObjectives, onReview, onReset }: DashboardProps) {
+  if (!questions) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
+        <p className="font-mono text-xs text-muted-foreground">Loading question bank…</p>
+      </div>
+    );
+  }
+
   const correctIds = new Set(Object.entries(progress.results).filter(([, v]) => v === "correct").map(([k]) => k));
   const totalAnswered = Object.keys(progress.results).length;
-  const mastery = Math.round((correctIds.size / ALL_QUESTIONS.length) * 100);
+  const mastery = Math.round((correctIds.size / questions.length) * 100);
   const missedCount = Object.values(progress.results).filter((v) => v === "incorrect").length;
   const lastExam = progress.exams[progress.exams.length - 1];
 
@@ -32,7 +42,7 @@ export default function Dashboard({ progress, onStudy, onExam, onFlashcards, onO
               <span className="text-muted-foreground">Study Guide</span>
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-              100 exam-style questions with full explanations, a blueprint-weighted mock exam,
+              {questions.length} exam-style questions with full explanations, a blueprint-weighted mock exam,
               flashcards, and a missed-question review deck — across all four domains.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 font-mono text-[11px] text-muted-foreground">
@@ -60,7 +70,7 @@ export default function Dashboard({ progress, onStudy, onExam, onFlashcards, onO
               </div>
             </div>
             <p className="text-center font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              Mastery<br />{correctIds.size}/{ALL_QUESTIONS.length} mastered
+              Mastery<br />{correctIds.size}/{questions.length} mastered
             </p>
           </div>
         </div>
@@ -110,7 +120,7 @@ export default function Dashboard({ progress, onStudy, onExam, onFlashcards, onO
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {DOMAINS.map((d) => {
-          const qs = questionsForDomain(d.id);
+          const qs = questions.filter((q) => q.domain === d.id);
           const ok = qs.filter((q) => correctIds.has(q.id)).length;
           const answered = qs.filter((q) => progress.results[q.id]).length;
           const pctOk = Math.round((ok / qs.length) * 100);
@@ -149,11 +159,16 @@ export default function Dashboard({ progress, onStudy, onExam, onFlashcards, onO
 
       {/* Footer */}
       <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
-        <p className="text-xs text-muted-foreground">
-          {totalAnswered > 0
-            ? "Progress is saved in this browser only (localStorage) — it won't sync across devices."
-            : "Pick a domain to start — your progress saves automatically in this browser."}
-        </p>
+        <div className="text-xs text-muted-foreground">
+          <p>
+            {totalAnswered > 0
+              ? "Progress is saved in this browser only (localStorage) — it won't sync across devices."
+              : "Pick a domain to start — your progress saves automatically in this browser."}
+          </p>
+          <p className="mt-1 text-muted-foreground/70">
+            Includes 391 questions adapted from OpenExamPrep (free practice resource), reviewed against the CS0-004 blueprint — off-blueprint items removed; 100 original CS0-004-aligned questions marked with objective codes.
+          </p>
+        </div>
         {totalAnswered > 0 && (
           <button
             onClick={onReset}

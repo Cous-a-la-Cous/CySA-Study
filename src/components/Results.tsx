@@ -125,7 +125,8 @@ export default function Results({ result, mode, onExit, onRetryMissed }: Results
                       {correct ? "Correct" : "Missed"}
                     </span>
                     <span className="font-mono text-[10px] text-muted-foreground">
-                      {dom.code} · Objective {q.objective} · {q.topic}
+                      {dom.code}{q.objective ? ` · Objective ${q.objective}` : ""} · {q.topic}
+                      {q.source ? ` · via ${q.source}` : ""}
                     </span>
                   </div>
                   <p className="mb-3 text-sm font-medium leading-relaxed">{q.question}</p>

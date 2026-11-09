@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Dashboard from "../sections/Dashboard";
 import Quiz, { type QuizResult } from "../components/Quiz";
 import Results from "../components/Results";
 import Flashcards from "../sections/Flashcards";
 import Objectives from "../sections/Objectives";
-import { ALL_QUESTIONS, questionsForDomain, shuffle } from "../data";
+import { loadAllQuestions, shuffle } from "../data";
 import { DOMAINS } from "../data/domains";
 import type { Question } from "../data/types";
 import {
@@ -18,6 +18,7 @@ const EXAM_PLAN: [number, number][] = [[1, 14], [2, 10], [3, 10], [4, 6]]; // bl
 export default function Home() {
   const [view, setView] = useState<View>("dash");
   const [progress, setProgress] = useState<Progress>(loadProgress);
+  const [allQuestions, setAllQuestions] = useState<Question[] | null>(null);
   const [quiz, setQuiz] = useState<{
     questions: Question[];
     mode: "study" | "exam";
@@ -26,15 +27,21 @@ export default function Home() {
   } | null>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
 
+  // Load the full 500-question bank in the background right away
+  useEffect(() => {
+    loadAllQuestions().then(setAllQuestions);
+  }, []);
+
   const missedQuestions = useMemo(
-    () => ALL_QUESTIONS.filter((q) => progress.results[q.id] === "incorrect"),
-    [progress],
+    () => (allQuestions ?? []).filter((q) => progress.results[q.id] === "incorrect"),
+    [allQuestions, progress],
   );
 
   const startStudy = (domainId: number) => {
+    if (!allQuestions) return;
     const d = DOMAINS.find((x) => x.id === domainId)!;
     setQuiz({
-      questions: shuffle(questionsForDomain(domainId)),
+      questions: shuffle(allQuestions.filter((q) => q.domain === domainId)),
       mode: "study",
       title: `${d.code} ${d.title}`,
     });
@@ -42,7 +49,10 @@ export default function Home() {
   };
 
   const startExam = () => {
-    const qs = EXAM_PLAN.flatMap(([dom, n]) => shuffle(questionsForDomain(dom)).slice(0, n));
+    if (!allQuestions) return;
+    const qs = EXAM_PLAN.flatMap(([dom, n]) =>
+      shuffle(allQuestions.filter((q) => q.domain === dom)).slice(0, n),
+    );
     setQuiz({
       questions: shuffle(qs),
       mode: "exam",
@@ -148,6 +158,7 @@ export default function Home() {
       <main className="pt-6">
         {view === "dash" && (
           <Dashboard
+            questions={allQuestions}
             progress={progress}
             onStudy={startStudy}
             onExam={startExam}

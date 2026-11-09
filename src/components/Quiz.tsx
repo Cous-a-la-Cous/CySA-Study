@@ -112,8 +112,13 @@ export default function Quiz({ questions, mode, title, timeLimitMinutes, onAnswe
           {domain.code} {domain.title}
         </span>
         <span className="rounded-full bg-secondary px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
-          Objective {q.objective} · {q.topic}
+          {q.objective ? `Objective ${q.objective} · ${q.topic}` : q.topic}
         </span>
+        {q.source && (
+          <span className="rounded-full border border-border px-2.5 py-1 font-mono text-[10px] text-muted-foreground/70">
+            via {q.source}
+          </span>
+        )}
       </div>
 
       {/* Question */}
